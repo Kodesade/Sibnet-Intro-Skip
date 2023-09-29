@@ -1,15 +1,17 @@
 require 'json'
 require 'selenium-webdriver'
 require_relative 'prettier'
+require 'lineargs'
 
 options = Selenium::WebDriver::Options.firefox
-options.args << "-profile /home/luca/.mozilla/firefox/nnc141tq.default-esr"
+options.args << ARGL.parse("--profile","-profile /home/luca/.mozilla/firefox/nnc141tq.default-esr")
 
 driver = Selenium::WebDriver.for :firefox, options: options
 
 wait = Selenium::WebDriver::Wait.new(timeout: 60*60*3) # seconds
-print "iFrame ID : "
-iframeID = gets.chomp
+iframeID = ARGL.parse("--frame-id","playerDF")
+skip_length = ARGL.parse("--skip-len",85)
+
 while true
   print `clear`
   driver.switch_to.default_content
@@ -32,16 +34,15 @@ while true
     currentTimeEl.video_player = arguments[1];
     currentTimeEl.addEventListener('click',function skip_intro(evt){
       console.log(evt.target.video_player.currentTime);
-      evt.target.video_player.currentTime += 85;
+      evt.target.video_player.currentTime += #{skip_length};
       // currentTimeEl.removeEventListener('click',skip_intro)
       console.log('Intro skipped!')
     })" \
   ,currentTime,video_player)
   
-  driver.switch_to.default_content
   loop{
     begin
-      iframe.displayed?
+      video_player.displayed?
     rescue
       puts "Next..."
       break
