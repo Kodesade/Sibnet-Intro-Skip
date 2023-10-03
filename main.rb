@@ -4,7 +4,7 @@ require_relative 'prettier'
 require 'lineargs'
 
 options = Selenium::WebDriver::Options.firefox
-options.args << ARGL.parse("--profile","-profile /home/luca/.mozilla/firefox/nnc141tq.default-esr")
+# options.args << ARGL.parse("--profile","-profile /home/{name}/.mozilla/firefox/{profile}")
 
 driver = Selenium::WebDriver.for :firefox, options: options
 
